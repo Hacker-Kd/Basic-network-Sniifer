@@ -1,0 +1,31 @@
+from scapy.all import sniff, IP, TCP, UDP, ICMP
+
+def process_packet(packet):
+    if IP in packet:
+        ip_layer = packet[IP]
+        src_ip = ip_layer.src
+        dst_ip = ip_layer.dst
+        protocol = ip_layer.proto
+
+        if protocol == 6 and TCP in packet:
+            print(f"[TCP] {src_ip} → {dst_ip}")
+        elif protocol == 17 and UDP in packet:
+            print(f"[UDP] {src_ip} → {dst_ip}")
+        elif protocol == 1 and ICMP in packet:
+            print(f"[ICMP] {src_ip} → {dst_ip}")
+
+        # Trigger logic for Google DNS
+        if dst_ip == "8.8.8.8":
+            print("🔔 Triggered: Packet to Google DNS detected!")
+
+print("🔍 Starting packet sniffer...")
+print("Press Ctrl+C to stop.\n")
+sniff(filter="ip", prn=process_packet, store=0)
+
+
+What This Script Does
+- Captures all IP packets in real time
+- Filters and prints TCP, UDP, and ICMP traffic
+- Detects packets sent to 8.8.8.8 (Google DNS) and triggers a custom alert
+- Runs cleanly in terminal with readable output
+
