@@ -1,0 +1,4 @@
+source ~/scapy-env/bin/activate
+pip freeze > requirements.txt
+
+sudo ~/scapy-env/bin/python sniffer.py
